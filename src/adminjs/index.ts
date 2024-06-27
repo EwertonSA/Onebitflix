@@ -5,7 +5,7 @@ import AdminJsExpress from '@adminjs/express'
 import AdminJsSequelize from '@adminjs/sequelize'
 import { database } from '../database'
 import { adminJsResources } from './resources'
-import { User } from '../models'
+import { Category, Course, Episode, User } from '../models'
 import bcrypt from 'bcrypt'
 import {locale} from './locale'
 AdminJs.registerAdapter(AdminJsSequelize)
@@ -15,6 +15,24 @@ export const adminJs = new AdminJs({
   resources:adminJsResources,
   rootPath: '/admin',
 
+ 
+  locale: locale,
+  dashboard:{
+    component: AdminJs.bundle('./components/Dashboard'),
+    
+    handler:async (req,res,context)=>{
+      const courses= await Course.count()
+      const episodes= await Episode.count()
+      const categories= await Category.count()
+      const standarUSers=await User.count()
+      res.json({
+        'Cursos:':courses,
+        'Episodios:':episodes,
+        'Categorias:':categories,
+        'Usuários:':standarUSers
+      })
+    }
+  },
   branding: {
     companyName: 'OneBitFlix',
     logo: "/logo.svg",
@@ -35,8 +53,7 @@ export const adminJs = new AdminJs({
 	      hoverBg: '#151515',
       }
     }
-  },
-  locale: locale,
+  }
 })
 
 export const adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(adminJs, {

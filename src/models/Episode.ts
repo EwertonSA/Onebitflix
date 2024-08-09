@@ -1,5 +1,6 @@
-import { DataTypes, Model, Optional } from "sequelize"
-import { database } from "../database"
+import {DataTypes,Model,Optional} from 'sequelize';
+import {database} from '../database';
+import {WatchTimeInstance} from "./WatchTimes";
 
 export interface Episode{
     id:number
@@ -10,42 +11,41 @@ export interface Episode{
     secondsLong:number
     courseId:number
 }
-export interface EpisodeCreationAttibutes extends Optional<Episode, 'id'|'videoUrl'|'secondsLong'>{}
+export interface EpisodeCreationAttributes extends Optional<Episode,'id' | 'videoUrl' | 'secondsLong'>{}
+export interface EpisodeInstance extends Model<Episode, EpisodeCreationAttributes>, Episode {
+  WatchingTime?:WatchTimeInstance
+}
 
-
-export interface EpisodeInstance extends Model<Episode,EpisodeCreationAttibutes>, Episode{}
-
-
-export const Episode = database.define<EpisodeInstance, Episode>('Episode', {
-  id: {
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true,
-    type: DataTypes.INTEGER
-  },
-  name: {
-    allowNull: false,
-    type: DataTypes.STRING
-  },
-  synopsis: {
-    allowNull: false,
-    type: DataTypes.TEXT
-  },
-  order: {
-    allowNull: false,
-    type: DataTypes.STRING
-  },
-  videoUrl: {
-    type: DataTypes.STRING
-  },
-  secondsLong: {
-    type: DataTypes.INTEGER
-  },
-  courseId: {
-    allowNull: false,
-    type: DataTypes.INTEGER,
-    references: { model: 'courses', key: 'id' },
-    onUpdate: 'CASCADE',
-    onDelete: 'RESTRICT'
-  }
+export const Episode= database.define<EpisodeInstance,Episode>('Episodes',{
+    id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
+      },
+      name: {
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      synopsis: {
+        allowNull: false,
+        type: DataTypes.TEXT
+      },
+      order: {
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      videoUrl: {
+        type: DataTypes.STRING
+      },
+      secondsLong: {
+        type: DataTypes.INTEGER
+      },
+      courseId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: { model: 'courses', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
+      }
 })

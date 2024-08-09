@@ -1,0 +1,45 @@
+import { Response } from "express";
+import { AuthenticatedRequest } from "../midlewares/auth";
+import { favoriteService } from "../services/favoriteService";
+
+export const favoritesController = {
+index: async(req:AuthenticatedRequest,res:Response)=>{
+  const userId=req.user!.id
+  try {
+    const favorites= await favoriteService.findUserId(userId)
+    return res.json(favorites)
+  } catch (error) {
+    if(error instanceof Error)
+    return res.status(400).json({message: error.message})
+  }
+},
+  save: async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user!.id
+    const { courseId } = req.body
+
+    try {
+      const favorite = await favoriteService.create(userId, courseId)
+      return res.status(201).json(favorite)
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(400).json({ message: err.message })
+      }
+    }
+  },
+  delete: async( req:AuthenticatedRequest,res:Response)=>{
+    const userId= req.user!.id
+    const courseId = parseInt(req.params.id, 10);
+
+    if (isNaN(courseId)) {
+        return res.status(400).json({ message: "Invalid course ID" });
+    }
+    try{
+      await favoriteService.delete(userId,courseId)
+      return res.status(204).send()
+    }catch(err){
+      if (err instanceof Error) {
+        return res.status(400).json({ message: err.message })
+    }
+    }
+},
+}

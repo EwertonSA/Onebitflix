@@ -12,9 +12,14 @@ export const episodeResourceOptions: ResourceOptions = {
 }
 export const episodeResourceFeatures: FeatureType[]=[
     uploadFileFeature({
-        provider:{local:{bucket:path.join(__dirname,'../../../uploads')
-
-        }},
+      provider: {
+        local: {
+          bucket: path.join(__dirname, '../../../public'),
+          opts:{
+            baseUrl:"/",
+          },
+        },
+      },
         properties:{
             key:'videoUrl',
             file:'uploadVideo'
